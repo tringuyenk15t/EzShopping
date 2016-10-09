@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1051261543170",
+    "firebase_url": "https://ezshopping-85292.firebaseio.com",
+    "project_id": "ezshopping-85292",
+    "storage_bucket": "ezshopping-85292.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1051261543170:android:a572ac1fffb09a47",
+        "android_client_info": {
+          "package_name": "app.com.tringuyen.ezshopping"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1051261543170-q6cicl375os548q7vdpi33b4gnar4ast.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.com.tringuyen.ezshopping",
+            "certificate_hash": "C8BB7BA6FC1402A80BCE5B4959FC4B705701A513"
+          }
+        },
+        {
+          "client_id": "1051261543170-oo9j407smbjmkv9bpmjm0fbvra76hdbo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDzLeer4eBIp2sZMF5JRU7g7lFHxelzoPY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1051261543170-oo9j407smbjmkv9bpmjm0fbvra76hdbo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
