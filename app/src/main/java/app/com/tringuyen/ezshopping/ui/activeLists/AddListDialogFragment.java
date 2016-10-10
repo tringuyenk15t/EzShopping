@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import app.com.tringuyen.ezshopping.R;
+import app.com.tringuyen.ezshopping.model.ShoppingList;
 import app.com.tringuyen.ezshopping.uti.FirebaseHelper;
 
 /**
@@ -95,7 +96,9 @@ public class AddListDialogFragment extends DialogFragment {
      * Add new active list
      */
     public void addShoppingList() {
-//        String listname = mEditTextListName.getText().toString();
+        String listName = mEditTextListName.getText().toString();
 //        FirebaseHelper.getIntance().saveChatItem(listname);
+        ShoppingList newShoppingList = new ShoppingList(listName, "Anomynous Owner");
+        FirebaseHelper.getIntance().saveShoppingList(newShoppingList);
     }
 }

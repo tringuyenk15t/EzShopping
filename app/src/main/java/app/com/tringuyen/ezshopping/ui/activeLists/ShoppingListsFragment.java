@@ -13,9 +13,13 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
+
 import app.com.tringuyen.ezshopping.R;
+import app.com.tringuyen.ezshopping.model.ShoppingList;
 import app.com.tringuyen.ezshopping.uti.Constants;
 import app.com.tringuyen.ezshopping.uti.FirebaseHelper;
+import app.com.tringuyen.ezshopping.uti.Utils;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass that shows a list of all shopping lists a user can see.
@@ -24,7 +28,7 @@ import app.com.tringuyen.ezshopping.uti.FirebaseHelper;
  */
 public class ShoppingListsFragment extends Fragment {
    private ListView mListView;
-    private TextView mTextViewListName;
+    private TextView mTextViewListName, mTextViewOwner, mTextViewLastChangedDate;
     public ShoppingListsFragment ()
     {
         /* Required empty public constructor */
@@ -66,12 +70,14 @@ public class ShoppingListsFragment extends Fragment {
         final View rootView = inflater.inflate(R.layout.fragment_shopping_lists, container, false);
         initializeScreen(rootView);
 
-        FirebaseHelper.getIntance().getDataCollection(Constants.LSTNAME).addValueEventListener(new ValueEventListener() {
+        FirebaseHelper.getIntance().getDataCollection(Constants.ACTLIST).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                String listName = dataSnapshot.getValue().toString();
-                mTextViewListName = (TextView) rootView.findViewById(R.id.text_view_list_name);
-                mTextViewListName.setText(listName);
+                ShoppingList shoppingList = dataSnapshot.getValue(ShoppingList.class);
+                String date = Utils.SIMPLE_DATE_FORMAT.format(shoppingList.getDateLastChangedLong());
+                mTextViewListName.setText(shoppingList.getListName());
+                mTextViewOwner.setText(shoppingList.getOwner());
+                mTextViewLastChangedDate.setText(date);
             }
 
             @Override
@@ -103,5 +109,8 @@ public class ShoppingListsFragment extends Fragment {
      */
     private void initializeScreen(View rootView) {
         mListView = (ListView) rootView.findViewById(R.id.list_view_active_lists);
+        mTextViewListName = (TextView) rootView.findViewById(R.id.text_view_list_name);
+        mTextViewOwner = (TextView) rootView.findViewById(R.id.text_view_created_by_user);
+        mTextViewLastChangedDate = (TextView) rootView.findViewById(R.id.text_view_edit_time);
     }
 }
