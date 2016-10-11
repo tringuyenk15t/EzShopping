@@ -97,7 +97,6 @@ public class AddListDialogFragment extends DialogFragment {
      */
     public void addShoppingList() {
         String listName = mEditTextListName.getText().toString();
-//        FirebaseHelper.getIntance().saveChatItem(listname);
         ShoppingList newShoppingList = new ShoppingList(listName, "Anomynous Owner");
         FirebaseHelper.getIntance().saveShoppingList(newShoppingList);
     }

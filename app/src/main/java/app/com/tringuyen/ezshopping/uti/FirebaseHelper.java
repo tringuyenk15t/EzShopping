@@ -33,9 +33,6 @@ public class FirebaseHelper {
         DatabaseReference chatCollection = cliendDB.child(Constants.ACTLIST);
         chatCollection.push();
         chatCollection.setValue(shoppingList);
-//        DatabaseReference newChatItem = chatCollection.push();
-//        newChatItem.setValue(listName);
-//        return newChatItem.getKey();
     }
 
     public DatabaseReference getDataCollection(String childName)

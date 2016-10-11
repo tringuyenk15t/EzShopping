@@ -1,5 +1,6 @@
 package app.com.tringuyen.ezshopping.ui.activeLists;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,13 +14,14 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 import app.com.tringuyen.ezshopping.R;
 import app.com.tringuyen.ezshopping.model.ShoppingList;
+import app.com.tringuyen.ezshopping.ui.activeListDetails.ActiveListDetailsActivity;
 import app.com.tringuyen.ezshopping.uti.Constants;
 import app.com.tringuyen.ezshopping.uti.FirebaseHelper;
-import app.com.tringuyen.ezshopping.uti.Utils;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass that shows a list of all shopping lists a user can see.
@@ -73,11 +75,10 @@ public class ShoppingListsFragment extends Fragment {
         FirebaseHelper.getIntance().getDataCollection(Constants.ACTLIST).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                ShoppingList shoppingList = dataSnapshot.getValue(ShoppingList.class);
-                String date = Utils.SIMPLE_DATE_FORMAT.format(shoppingList.getDateLastChangedLong());
+                ShoppingList shoppingList = new ShoppingList(dataSnapshot);
                 mTextViewListName.setText(shoppingList.getListName());
                 mTextViewOwner.setText(shoppingList.getOwner());
-                mTextViewLastChangedDate.setText(date);
+                mTextViewLastChangedDate.setText(Constants.SIMPLE_DATE_FORMAT.format(shoppingList.getDateLastChangedLong()));
             }
 
             @Override
@@ -93,6 +94,14 @@ public class ShoppingListsFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+            }
+        });
+
+        mTextViewListName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), ActiveListDetailsActivity.class);
+                startActivity(intent);
             }
         });
 
