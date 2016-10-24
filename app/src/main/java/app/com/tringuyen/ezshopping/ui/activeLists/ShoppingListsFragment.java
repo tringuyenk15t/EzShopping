@@ -10,12 +10,12 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import app.com.tringuyen.ezshopping.R;
 import app.com.tringuyen.ezshopping.model.ShoppingList;
@@ -29,8 +29,10 @@ import app.com.tringuyen.ezshopping.uti.FirebaseHelper;
  * create an instance of this fragment.
  */
 public class ShoppingListsFragment extends Fragment {
-   private ListView mListView;
+    private ListView mListView;
     private TextView mTextViewListName, mTextViewOwner, mTextViewLastChangedDate;
+    private static ShoppingList shoppingList;
+
     public ShoppingListsFragment ()
     {
         /* Required empty public constructor */
@@ -75,10 +77,15 @@ public class ShoppingListsFragment extends Fragment {
         FirebaseHelper.getIntance().getDataCollection(Constants.ACTLIST).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                ShoppingList shoppingList = new ShoppingList(dataSnapshot);
-                mTextViewListName.setText(shoppingList.getListName());
-                mTextViewOwner.setText(shoppingList.getOwner());
-                mTextViewLastChangedDate.setText(Constants.SIMPLE_DATE_FORMAT.format(shoppingList.getDateLastChangedLong()));
+                if(dataSnapshot.getValue(ShoppingList.class) != null) {
+                    // If there was data, set shopping list information
+                    shoppingList = new ShoppingList(dataSnapshot);
+                    if (shoppingList != null) {
+                        mTextViewListName.setText(shoppingList.getListName());
+                        mTextViewOwner.setText(shoppingList.getOwner());
+                        mTextViewLastChangedDate.setText(convertTimeStamp(shoppingList));
+                    }
+                }
             }
 
             @Override
@@ -100,8 +107,11 @@ public class ShoppingListsFragment extends Fragment {
         mTextViewListName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+            if (mTextViewListName.getText().toString().length() > 0)
+            {
                 Intent intent = new Intent(getContext(), ActiveListDetailsActivity.class);
                 startActivity(intent);
+            }
             }
         });
 
@@ -121,5 +131,18 @@ public class ShoppingListsFragment extends Fragment {
         mTextViewListName = (TextView) rootView.findViewById(R.id.text_view_list_name);
         mTextViewOwner = (TextView) rootView.findViewById(R.id.text_view_created_by_user);
         mTextViewLastChangedDate = (TextView) rootView.findViewById(R.id.text_view_edit_time);
+    }
+
+    //convert timestamp from HashMap to String.
+    private String convertTimeStamp(ShoppingList shoppingList)
+    {
+        HashMap<String, Object> timeStamp = shoppingList.getDateLastChanged();
+        if (timeStamp.get(Constants.FIREBASE_PROPERTY_TIMESTAMP) instanceof Long)
+        {
+            return Constants.SIMPLE_DATE_FORMAT.format
+                    ((long) timeStamp.get(Constants.FIREBASE_PROPERTY_TIMESTAMP));
+        }
+        else
+        return "";
     }
 }

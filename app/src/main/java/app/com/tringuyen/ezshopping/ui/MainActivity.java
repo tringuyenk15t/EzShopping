@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.View;
 
 import app.com.tringuyen.ezshopping.R;
@@ -69,6 +70,12 @@ public class MainActivity extends EzShoppingBaseActivity {
         dialog.show(MainActivity.this.getFragmentManager(), "AddMealDialogFragment");
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_base,menu);
+        return true;
+    }
+
     /**
      * SectionPagerAdapter class that extends FragmentStatePagerAdapter to save fragments state
      */
@@ -127,4 +134,5 @@ public class MainActivity extends EzShoppingBaseActivity {
             }
         }
     }
+
 }
