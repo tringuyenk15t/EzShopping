@@ -36,6 +36,8 @@ dependencies {
     compile 'com.google.android.gms:play-services-safetynet:9.6.1'
     //realtime database
     compile 'com.google.firebase:firebase-database:9.6.1'
+    //Jackson
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.8.3'
 }
 // Add to the bottom of the file
 apply plugin: 'com.google.gms.google-services'

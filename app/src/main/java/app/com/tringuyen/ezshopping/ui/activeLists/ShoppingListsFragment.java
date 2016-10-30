@@ -1,5 +1,6 @@
 package app.com.tringuyen.ezshopping.ui.activeLists;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,11 +10,16 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
+
 import app.com.tringuyen.ezshopping.R;
+import app.com.tringuyen.ezshopping.model.ShoppingList;
+import app.com.tringuyen.ezshopping.ui.activeListDetails.ActiveListDetailsActivity;
 import app.com.tringuyen.ezshopping.uti.Constants;
 import app.com.tringuyen.ezshopping.uti.FirebaseHelper;
 
@@ -23,8 +29,10 @@ import app.com.tringuyen.ezshopping.uti.FirebaseHelper;
  * create an instance of this fragment.
  */
 public class ShoppingListsFragment extends Fragment {
-   private ListView mListView;
-    private TextView mTextViewListName;
+    private ListView mListView;
+    private TextView mTextViewListName, mTextViewOwner, mTextViewLastChangedDate;
+    private static ShoppingList shoppingList;
+
     public ShoppingListsFragment ()
     {
         /* Required empty public constructor */
@@ -66,12 +74,18 @@ public class ShoppingListsFragment extends Fragment {
         final View rootView = inflater.inflate(R.layout.fragment_shopping_lists, container, false);
         initializeScreen(rootView);
 
-        FirebaseHelper.getIntance().getDataCollection(Constants.LSTNAME).addValueEventListener(new ValueEventListener() {
+        FirebaseHelper.getIntance().getDataCollection(Constants.ACTLIST).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                String listName = dataSnapshot.getValue().toString();
-                mTextViewListName = (TextView) rootView.findViewById(R.id.text_view_list_name);
-                mTextViewListName.setText(listName);
+                if(dataSnapshot.getValue(ShoppingList.class) != null) {
+                    // If there was data, set shopping list information
+                    shoppingList = new ShoppingList(dataSnapshot);
+                    if (shoppingList != null) {
+                        mTextViewListName.setText(shoppingList.getListName());
+                        mTextViewOwner.setText(shoppingList.getOwner());
+                        mTextViewLastChangedDate.setText(convertTimeStamp(shoppingList));
+                    }
+                }
             }
 
             @Override
@@ -90,6 +104,17 @@ public class ShoppingListsFragment extends Fragment {
             }
         });
 
+        mTextViewListName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            if (mTextViewListName.getText().toString().length() > 0)
+            {
+                Intent intent = new Intent(getContext(), ActiveListDetailsActivity.class);
+                startActivity(intent);
+            }
+            }
+        });
+
         return rootView;
     }
 
@@ -103,5 +128,21 @@ public class ShoppingListsFragment extends Fragment {
      */
     private void initializeScreen(View rootView) {
         mListView = (ListView) rootView.findViewById(R.id.list_view_active_lists);
+        mTextViewListName = (TextView) rootView.findViewById(R.id.text_view_list_name);
+        mTextViewOwner = (TextView) rootView.findViewById(R.id.text_view_created_by_user);
+        mTextViewLastChangedDate = (TextView) rootView.findViewById(R.id.text_view_edit_time);
+    }
+
+    //convert timestamp from HashMap to String.
+    private String convertTimeStamp(ShoppingList shoppingList)
+    {
+        HashMap<String, Object> timeStamp = shoppingList.getDateLastChanged();
+        if (timeStamp.get(Constants.FIREBASE_PROPERTY_TIMESTAMP) instanceof Long)
+        {
+            return Constants.SIMPLE_DATE_FORMAT.format
+                    ((long) timeStamp.get(Constants.FIREBASE_PROPERTY_TIMESTAMP));
+        }
+        else
+        return "";
     }
 }

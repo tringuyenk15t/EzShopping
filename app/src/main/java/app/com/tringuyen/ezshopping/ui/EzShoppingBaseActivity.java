@@ -72,7 +72,8 @@ public abstract class EzShoppingBaseActivity extends AppCompatActivity implement
     protected void initializeBackground(LinearLayout linearLayout) {
 
         /**
-         * Set different background image for landscape and portrait layouts
+         * Set different background image for landscape and portrait layoutsp['
+         *
          */
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             linearLayout.setBackgroundResource(R.drawable.background_loginscreen_land);
