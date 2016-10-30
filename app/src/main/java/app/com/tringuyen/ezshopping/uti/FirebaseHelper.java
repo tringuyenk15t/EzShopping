@@ -43,7 +43,8 @@ public class FirebaseHelper {
     public void saveShoppingList(ShoppingList shoppingList)
     {
         DatabaseReference dataCollection = cliendDB.child(Constants.ACTLIST);
-        dataCollection.setValue(shoppingList);
+        DatabaseReference newListItem = dataCollection.push();
+        newListItem.setValue(shoppingList);
     }
 
     /**

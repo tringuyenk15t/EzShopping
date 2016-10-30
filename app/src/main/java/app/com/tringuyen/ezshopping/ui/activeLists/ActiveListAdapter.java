@@ -9,6 +9,7 @@ import com.google.firebase.database.DatabaseReference;
 
 import app.com.tringuyen.ezshopping.R;
 import app.com.tringuyen.ezshopping.model.ShoppingList;
+import app.com.tringuyen.ezshopping.uti.Utils;
 
 /**
  * Created by Tri Nguyen on 10/30/2016.
@@ -73,6 +74,6 @@ public class ActiveListAdapter extends FirebaseListAdapter<ShoppingList>
 
         tv_listName.setText(model.getListName());
         tv_owner.setText(model.getOwner());
-//        tv_editTime.setText(Utils.convertTimeStamp(model));
+//        tv_editTime.setText(Utils.convertTimeStamp(model.getDateCreated()));
     }
 }
