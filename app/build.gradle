@@ -38,6 +38,8 @@ dependencies {
     compile 'com.google.firebase:firebase-database:9.6.1'
     //Jackson
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.8.3'
+    //firebase UI
+    compile 'com.firebaseui:firebase-ui:0.6.2'
 }
 // Add to the bottom of the file
 apply plugin: 'com.google.gms.google-services'
