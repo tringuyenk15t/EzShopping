@@ -13,8 +13,13 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.firebase.database.ServerValue;
+
+import java.util.HashMap;
+
 import app.com.tringuyen.ezshopping.R;
 import app.com.tringuyen.ezshopping.model.ShoppingList;
+import app.com.tringuyen.ezshopping.uti.Constants;
 import app.com.tringuyen.ezshopping.uti.FirebaseHelper;
 
 /**
@@ -97,7 +102,9 @@ public class AddListDialogFragment extends DialogFragment {
      */
     public void addShoppingList() {
         String listName = mEditTextListName.getText().toString();
-        ShoppingList newShoppingList = new ShoppingList(listName, "Anomynous Owner");
+        HashMap<String,Object> dateCreated = new HashMap<>();
+        dateCreated.put(Constants.FIREBASE_PROPERTY_TIMESTAMP, ServerValue.TIMESTAMP);
+        ShoppingList newShoppingList = new ShoppingList(listName, "Anomynous Owner",dateCreated);
         FirebaseHelper.getIntance().saveShoppingList(newShoppingList);
     }
 }

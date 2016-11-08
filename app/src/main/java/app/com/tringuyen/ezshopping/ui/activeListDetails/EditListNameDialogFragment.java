@@ -19,13 +19,13 @@ public class EditListNameDialogFragment extends EditListDialogFragment {
 
     private static final String LOG_TAG = ActiveListDetailsActivity.class.getSimpleName();
     private String listName;
+    private String key;
     /**
      * Public static constructor that creates fragment and passes a bundle with data into it when adapter is created
      */
-    public static EditListNameDialogFragment newInstance(ShoppingList shoppingList) {
+    public static EditListNameDialogFragment newInstance(ShoppingList shoppingList, String listID) {
         EditListNameDialogFragment editListNameDialogFragment = new EditListNameDialogFragment();
-        Bundle bundle = EditListDialogFragment.newInstanceHelper(shoppingList, R.layout.dialog_edit_list);
-        //add list name to bundle
+        Bundle bundle = EditListDialogFragment.newInstanceHelper(shoppingList, R.layout.dialog_edit_list,listID);
         bundle.putString(Constants.LSTNAME,shoppingList.getListName());
         editListNameDialogFragment.setArguments(bundle);
         return editListNameDialogFragment;
@@ -37,8 +37,10 @@ public class EditListNameDialogFragment extends EditListDialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //get list name from bundle
-        listName = getArguments().getString(Constants.LSTNAME);
+        Bundle bundle = getArguments();
+
+        listName = bundle.getString(Constants.LSTNAME);
+        key  = bundle.getString(Constants.LIST_DETAIL_KEY);
     }
 
 
@@ -57,9 +59,19 @@ public class EditListNameDialogFragment extends EditListDialogFragment {
      * Changes the list name in all copies of the current list
      */
     protected void doListEdit() {
+        // get input name
         String newListName = mEditTextForList.getText().toString();
-        if (newListName.length() > 0 && !newListName.equals(listName)) {
-            FirebaseHelper.getIntance().updateListName(newListName);
+        // ensure new name is not null and does not duplicate with the old one
+        if(!newListName.equals(""))
+        {
+            if (listName != null && key != null)
+            {
+                if (!newListName.equals(listName))
+                {
+                    FirebaseHelper.getIntance().updateListName(newListName,key);
+                }
+            }
         }
     }
+
 }

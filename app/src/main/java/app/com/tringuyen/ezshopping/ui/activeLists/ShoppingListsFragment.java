@@ -3,6 +3,8 @@ package app.com.tringuyen.ezshopping.ui.activeLists;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,12 +12,16 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import app.com.tringuyen.ezshopping.R;
 import app.com.tringuyen.ezshopping.model.ShoppingList;
@@ -29,9 +35,9 @@ import app.com.tringuyen.ezshopping.uti.FirebaseHelper;
  * create an instance of this fragment.
  */
 public class ShoppingListsFragment extends Fragment {
+    //list view version
+    private ActiveListAdapter adapter;
     private ListView mListView;
-    private TextView mTextViewListName, mTextViewOwner, mTextViewLastChangedDate;
-    private static ShoppingList shoppingList;
 
     public ShoppingListsFragment ()
     {
@@ -48,11 +54,6 @@ public class ShoppingListsFragment extends Fragment {
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
     }
 
     /**
@@ -74,25 +75,9 @@ public class ShoppingListsFragment extends Fragment {
         final View rootView = inflater.inflate(R.layout.fragment_shopping_lists, container, false);
         initializeScreen(rootView);
 
-        FirebaseHelper.getIntance().getDataCollection(Constants.ACTLIST).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getValue(ShoppingList.class) != null) {
-                    // If there was data, set shopping list information
-                    shoppingList = new ShoppingList(dataSnapshot);
-                    if (shoppingList != null) {
-                        mTextViewListName.setText(shoppingList.getListName());
-                        mTextViewOwner.setText(shoppingList.getOwner());
-                        mTextViewLastChangedDate.setText(convertTimeStamp(shoppingList));
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        adapter = new ActiveListAdapter(getActivity(), ShoppingList.class,  R.layout.single_active_list,
+                FirebaseHelper.getIntance().getDataCollection(Constants.ACTLIST));
+        mListView.setAdapter(adapter);
 
         /**
          * Set interactive bits, such as click events and adapters
@@ -100,49 +85,27 @@ public class ShoppingListsFragment extends Fragment {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-            }
-        });
-
-        mTextViewListName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            if (mTextViewListName.getText().toString().length() > 0)
-            {
-                Intent intent = new Intent(getContext(), ActiveListDetailsActivity.class);
+                DatabaseReference listItemRef = adapter.getRef(position);
+                String key = listItemRef.getKey();
+                Intent intent = new Intent(getContext(),ActiveListDetailsActivity.class);
+                intent.putExtra(Constants.LIST_DETAIL_KEY,key);
                 startActivity(intent);
             }
-            }
         });
-
         return rootView;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        adapter.cleanup();
     }
 
     /**
      * Link layout elements from XML
      */
     private void initializeScreen(View rootView) {
+        //TODO change it to recyclerview in future update
         mListView = (ListView) rootView.findViewById(R.id.list_view_active_lists);
-        mTextViewListName = (TextView) rootView.findViewById(R.id.text_view_list_name);
-        mTextViewOwner = (TextView) rootView.findViewById(R.id.text_view_created_by_user);
-        mTextViewLastChangedDate = (TextView) rootView.findViewById(R.id.text_view_edit_time);
-    }
-
-    //convert timestamp from HashMap to String.
-    private String convertTimeStamp(ShoppingList shoppingList)
-    {
-        HashMap<String, Object> timeStamp = shoppingList.getDateLastChanged();
-        if (timeStamp.get(Constants.FIREBASE_PROPERTY_TIMESTAMP) instanceof Long)
-        {
-            return Constants.SIMPLE_DATE_FORMAT.format
-                    ((long) timeStamp.get(Constants.FIREBASE_PROPERTY_TIMESTAMP));
-        }
-        else
-        return "";
     }
 }

@@ -17,7 +17,8 @@ import app.com.tringuyen.ezshopping.uti.Constants;
 public class ShoppingList implements Parcelable {
     private String listName;
     private String owner;
-    private HashMap<String,Object> lastChangedDate;
+    private HashMap<String,Object> dateEdited;
+    private HashMap<String, Object> dateCreated;
 
     public static final Parcelable.Creator<ShoppingList> CREATOR = new Creator<ShoppingList>() {
         @Override
@@ -40,16 +41,18 @@ public class ShoppingList implements Parcelable {
     {
         this.listName = parcel.readString();
         this.owner = parcel.readString();
-        this.lastChangedDate = parcel.readHashMap(HashMap.class.getClassLoader());
+        this.dateEdited = parcel.readHashMap(HashMap.class.getClassLoader());
+        this.dateCreated = parcel.readHashMap(HashMap.class.getClassLoader());
     }
 
-    public ShoppingList(String listName, String owner) {
+    public ShoppingList(String listName, String owner, HashMap<String, Object> dateCreated) {
         this.listName = listName;
         this.owner = owner;
+        this.dateCreated = dateCreated;
         //Date last changed will always be set to ServerValue.TIMESTAMP
         HashMap<String, Object> dateLastChangedObj = new HashMap<String, Object>();
         dateLastChangedObj.put(Constants.FIREBASE_PROPERTY_TIMESTAMP, ServerValue.TIMESTAMP);
-        this.lastChangedDate = dateLastChangedObj;
+        this.dateEdited = dateLastChangedObj;
     }
 
     public ShoppingList(DataSnapshot dataSnapshot)
@@ -57,7 +60,8 @@ public class ShoppingList implements Parcelable {
         Map<String, Object> data =  (Map<String, Object>) dataSnapshot.getValue();
         this.listName = data.get("listName").toString();
         this.owner = data.get("owner").toString();
-        this.lastChangedDate = (HashMap<String, Object>) data.get("dateLastChanged");;
+        this.dateCreated = (HashMap<String, Object>) data.get(Constants.DATE_CREATED);
+        this.dateEdited = (HashMap<String, Object>) data.get(Constants.DATE_EDITED);
     }
 
     public String getListName() {
@@ -68,10 +72,18 @@ public class ShoppingList implements Parcelable {
         return owner;
     }
 
-    public HashMap<String, Object> getDateLastChanged() {
-        return lastChangedDate;
+//    public HashMap<String, Object> getDateLastChanged() {
+//        return lastChangedDate;
+//    }
+
+
+    public HashMap<String, Object> getDateEdited() {
+        return dateEdited;
     }
 
+    public HashMap<String, Object> getDateCreated() {
+        return dateCreated;
+    }
 
     @Override
     public int describeContents() {
@@ -82,8 +94,7 @@ public class ShoppingList implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(listName);
         dest.writeString(owner);
-        dest.writeMap(lastChangedDate);
+        dest.writeMap(dateEdited);
+        dest.writeMap(dateCreated);
     }
-
-
 }

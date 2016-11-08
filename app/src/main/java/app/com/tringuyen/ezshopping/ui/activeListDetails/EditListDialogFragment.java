@@ -32,10 +32,11 @@ public abstract class EditListDialogFragment extends DialogFragment {
      * @param resource
      * @return
      */
-     protected static Bundle newInstanceHelper(ShoppingList shoppingList, int resource)
+     protected static Bundle newInstanceHelper(ShoppingList shoppingList, int resource, String listID)
      {
          Bundle bundle = new Bundle();
          bundle.putInt(Constants.KEY_LAYOUT_RESOURCE,resource);
+         bundle.putString(Constants.LIST_DETAIL_KEY,listID);
          return bundle;
      }
 
@@ -70,8 +71,8 @@ public abstract class EditListDialogFragment extends DialogFragment {
         mEditTextForList = (EditText) rootView.findViewById(R.id.edit_text_list_dialog);
 
         /**
-         * Call doListEdit() when user taps "Done" keyboard action
-         */
+     * Call doListEdit() when user taps "Done" keyboard action
+     */
         mEditTextForList.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
