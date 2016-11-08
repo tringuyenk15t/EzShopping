@@ -61,7 +61,7 @@ public class ShoppingList implements Parcelable {
         this.listName = data.get("listName").toString();
         this.owner = data.get("owner").toString();
         this.dateCreated = (HashMap<String, Object>) data.get(Constants.DATE_CREATED);
-        this.dateEdited = (HashMap<String, Object>) data.get("dateLastChanged");
+        this.dateEdited = (HashMap<String, Object>) data.get(Constants.DATE_EDITED);
     }
 
     public String getListName() {

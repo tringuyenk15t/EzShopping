@@ -16,6 +16,7 @@ import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -34,10 +35,6 @@ import app.com.tringuyen.ezshopping.uti.FirebaseHelper;
  * create an instance of this fragment.
  */
 public class ShoppingListsFragment extends Fragment {
-//    recycler view version
-//    private RecyclerView rcl_shoppingList;
-//    private RecyclerView.LayoutManager manager;
-
     //list view version
     private ActiveListAdapter adapter;
     private ListView mListView;
@@ -82,46 +79,33 @@ public class ShoppingListsFragment extends Fragment {
                 FirebaseHelper.getIntance().getDataCollection(Constants.ACTLIST));
         mListView.setAdapter(adapter);
 
-//        /**
-//         * Set interactive bits, such as click events and adapters
-//         */
-//        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//
-//            }
-//        });
-//
-//        mTextViewListName.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//            if (mTextViewListName.getText().toString().length() > 0)
-//            {
-//                Intent intent = new Intent(getContext(), ActiveListDetailsActivity.class);
-//                startActivity(intent);
-//            }
-//            }
-//        });
-
-//        rcl_shoppingList.setAdapter(adapter);
-//        rcl_shoppingList.setLayoutManager(manager);
-
+        /**
+         * Set interactive bits, such as click events and adapters
+         */
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                DatabaseReference listItemRef = adapter.getRef(position);
+                String key = listItemRef.getKey();
+                Intent intent = new Intent(getContext(),ActiveListDetailsActivity.class);
+                intent.putExtra(Constants.LIST_DETAIL_KEY,key);
+                startActivity(intent);
+            }
+        });
         return rootView;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-//        adapter.cleanup();
+        adapter.cleanup();
     }
 
     /**
      * Link layout elements from XML
      */
     private void initializeScreen(View rootView) {
-//        rcl_shoppingList = (RecyclerView) rootView.findViewById(R.id.recycler_view_active_lists);
-//        manager = new LinearLayoutManager(getContext());
+        //TODO change it to recyclerview in future update
         mListView = (ListView) rootView.findViewById(R.id.list_view_active_lists);
-
     }
 }
