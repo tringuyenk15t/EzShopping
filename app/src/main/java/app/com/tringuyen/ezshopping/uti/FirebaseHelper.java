@@ -81,7 +81,7 @@ public class FirebaseHelper {
         newListObject.updateChildren(newListName, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                //TODO handle update error
+            //TODO handle update error
             }
         });
     }

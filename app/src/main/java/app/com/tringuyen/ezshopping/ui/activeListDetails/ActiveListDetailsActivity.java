@@ -53,8 +53,6 @@ public class ActiveListDetailsActivity extends EzShoppingBaseActivity {
         }
          //Link layout elements from XML and setup the toolbar
         initializeScreen();
-        setUpToolBar();
-        setupItemList();
     }
 
     /**
@@ -73,6 +71,8 @@ public class ActiveListDetailsActivity extends EzShoppingBaseActivity {
                 showAddListItemDialog();
             }
         });
+        setUpToolBar();
+        setupItemList();
     }
 
 
@@ -120,7 +120,6 @@ public class ActiveListDetailsActivity extends EzShoppingBaseActivity {
      */
     private void setupItemList()
     {
-        //setup item list
         DatabaseReference shoppingListRef = FirebaseHelper.getIntance().getDataCollection(Constants.SHOPPING_LIST_ITEM).child(key);
         listItemAdapter = new ActiveListItemAdapter(this,ShoppingListItem.class,R.layout.single_active_list_item,shoppingListRef);
         mListView.setAdapter(listItemAdapter);

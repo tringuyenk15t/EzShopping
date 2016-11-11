@@ -28,6 +28,14 @@ public class ActiveListItemAdapter extends FirebaseListAdapter<ShoppingListItem>
         ImageButton bt_remove = (ImageButton) v.findViewById(R.id.button_remove_item);
 
         tv_itemName.setText(model.getName());
+
+        tv_itemName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO create edit item name dialog here
+
+            }
+        });
         bt_remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -37,7 +45,7 @@ public class ActiveListItemAdapter extends FirebaseListAdapter<ShoppingListItem>
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                String a ="Item selected" + position;
+
                                 removeItem();
                             }
                         })
@@ -58,4 +66,5 @@ public class ActiveListItemAdapter extends FirebaseListAdapter<ShoppingListItem>
     {
 
     }
+
 }
