@@ -20,8 +20,8 @@ import app.com.tringuyen.ezshopping.uti.FirebaseHelper;
  */
 
 public class AddListItemDialogFragment extends DialogFragment {
-    private String key;
-    private EditText ed_itemName;
+    private String mItemID;
+    private EditText mItemNameEditText;
     /**
      * Public static constructor that creates fragment and passes a bundle with data into it when adapter is created
      */
@@ -37,7 +37,7 @@ public class AddListItemDialogFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        key = getArguments().getString(Constants.LIST_DETAIL_KEY);
+        mItemID = getArguments().getString(Constants.LIST_DETAIL_KEY);
     }
 
     @Override
@@ -52,12 +52,12 @@ public class AddListItemDialogFragment extends DialogFragment {
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View v = inflater.inflate(R.layout.dialog_add_item,null);
-        ed_itemName = (EditText) v.findViewById(R.id.edit_text_list_dialog);
+        mItemNameEditText = (EditText) v.findViewById(R.id.edit_text_list_dialog);
         buider.setView(v)
                 .setPositiveButton(R.string.positive_button_add_list_item, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String itemName = ed_itemName.getText().toString();
+                        String itemName = mItemNameEditText.getText().toString();
                         createNewItem(itemName);
                     }
                 })
@@ -75,7 +75,7 @@ public class AddListItemDialogFragment extends DialogFragment {
         if (itemName.length() > 0)
         {
             ShoppingListItem item = new ShoppingListItem(itemName);
-            FirebaseHelper.getIntance().addShoppingListItem(item,key);
+            FirebaseHelper.getIntance().addShoppingListItem(item, mItemID);
         }
     }
 }

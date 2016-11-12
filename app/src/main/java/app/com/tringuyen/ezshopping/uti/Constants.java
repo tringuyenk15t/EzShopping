@@ -9,7 +9,8 @@ import java.text.SimpleDateFormat;
 
 public class Constants {
 
-    public static final String LSTNAME = "listName";
+    public static final String LIST_NAME = "listName";
+    public static final String ITEM_NAME = "itemName";
     public static final String ACTLIST = "activeList";
     public static final String FIREBASE_PROPERTY_TIMESTAMP = "timestamp";
     public static final String DATE_CREATED = "dateCreated";

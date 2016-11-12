@@ -1,11 +1,7 @@
 package app.com.tringuyen.ezshopping.ui.activeListDetails;
 
 import android.app.Dialog;
-import android.app.DialogFragment;
-import android.content.Intent;
 import android.os.Bundle;
-
-import com.google.firebase.database.DatabaseReference;
 
 import app.com.tringuyen.ezshopping.R;
 import app.com.tringuyen.ezshopping.model.ShoppingList;
@@ -26,7 +22,7 @@ public class EditListNameDialogFragment extends EditListDialogFragment {
     public static EditListNameDialogFragment newInstance(ShoppingList shoppingList, String listID) {
         EditListNameDialogFragment editListNameDialogFragment = new EditListNameDialogFragment();
         Bundle bundle = EditListDialogFragment.newInstanceHelper(shoppingList, R.layout.dialog_edit_list,listID);
-        bundle.putString(Constants.LSTNAME,shoppingList.getListName());
+        bundle.putString(Constants.LIST_NAME,shoppingList.getListName());
         editListNameDialogFragment.setArguments(bundle);
         return editListNameDialogFragment;
     }
@@ -39,7 +35,7 @@ public class EditListNameDialogFragment extends EditListDialogFragment {
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
 
-        listName = bundle.getString(Constants.LSTNAME);
+        listName = bundle.getString(Constants.LIST_NAME);
         key  = bundle.getString(Constants.LIST_DETAIL_KEY);
     }
 

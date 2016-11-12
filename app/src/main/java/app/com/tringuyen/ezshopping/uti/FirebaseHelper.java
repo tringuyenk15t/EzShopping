@@ -1,6 +1,5 @@
 package app.com.tringuyen.ezshopping.uti;
 
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -76,14 +75,25 @@ public class FirebaseHelper {
         HashMap<String, Object> lastTimeChanged = new HashMap<String, Object>();
         lastTimeChanged.put(Constants.FIREBASE_PROPERTY_TIMESTAMP,ServerValue.TIMESTAMP);
 
-        newListName.put(Constants.LSTNAME,name);
+        newListName.put(Constants.LIST_NAME,name);
         newListName.put(Constants.DATE_EDITED,lastTimeChanged);
         newListObject.updateChildren(newListName, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-            //TODO handle update error
+
             }
         });
+    }
+
+    /**
+     *
+     */
+    public void updateItemName(String name, String listID, String itemID)
+    {
+        DatabaseReference itemRef = cliendDB.child(Constants.SHOPPING_LIST_ITEM).child(listID).child(itemID);
+        HashMap<String,Object> newItemName = new HashMap<>();
+        newItemName.put("name",name);
+        itemRef.updateChildren(newItemName);
     }
 
     /**
