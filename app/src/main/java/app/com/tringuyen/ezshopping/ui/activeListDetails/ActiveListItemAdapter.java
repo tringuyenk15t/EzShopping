@@ -48,13 +48,11 @@ public class ActiveListItemAdapter extends FirebaseListAdapter<ShoppingListItem>
 
         final String itemID = getRef(position).getKey();
 
-        tv_itemName.setText(model.getName());
+        tv_itemName.setText(model.getItemName());
         //set edit item listener
         tv_itemName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /* Gets the id of the item to remove */
-
                 EditListItemNameDialogFragment eidtItemDialog = EditListItemNameDialogFragment.newInstance(model, mListID,itemID);
                 eidtItemDialog.show(mActivity.getFragmentManager(),"EditItemFragment");
             }

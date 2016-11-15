@@ -12,6 +12,12 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ServerValue;
+
+import java.util.HashMap;
+import java.util.Objects;
+
 import app.com.tringuyen.ezshopping.R;
 import app.com.tringuyen.ezshopping.model.ShoppingListItem;
 import app.com.tringuyen.ezshopping.uti.Constants;
@@ -30,7 +36,7 @@ public class EditListItemNameDialogFragment extends DialogFragment {
     {
         EditListItemNameDialogFragment itemNameFragment = new EditListItemNameDialogFragment();
         Bundle bundle = new Bundle();
-        bundle.putString(Constants.ITEM_NAME,item.getName());
+        bundle.putString(Constants.ITEM_NAME,item.getItemName());
         bundle.putString(Constants.LIST_DETAIL_KEY,listID);
         bundle.putString(Constants.ITEM_KEY,itemID);
         itemNameFragment.setArguments(bundle);
@@ -110,7 +116,26 @@ public class EditListItemNameDialogFragment extends DialogFragment {
         String newListItemName = ed_editItemName.getText().toString();
         if (newListItemName.length() > 0 && newListItemName != itemName)
         {
-            FirebaseHelper.getIntance().updateItemName(newListItemName,listID,itemID);
+            DatabaseReference dbRef = FirebaseHelper.getIntance().getDatabase();
+
+            HashMap<String,Object> itemToUpdate = new HashMap<>();
+            HashMap<String,Object> itemNameToUpdate = new HashMap<>();
+            HashMap<String,Object> timestampToUpdate = new HashMap<>();
+
+            // add new item name
+//            itemNameToUpdate.put(Constants.ITEM_NAME,newListItemName);
+            itemToUpdate.put(
+                    Constants.SHOPPING_LIST_ITEM + "/" + listID + "/" + itemID + "/" + Constants.ITEM_NAME
+                    ,newListItemName);
+
+            // add new timestamp
+            timestampToUpdate.put(Constants.FIREBASE_PROPERTY_TIMESTAMP, ServerValue.TIMESTAMP);
+            itemToUpdate.put(
+                    Constants.ACTLIST + "/" + listID + "/" + Constants.DATE_EDITED
+                    ,timestampToUpdate);
+
+            // save to firebase database
+            dbRef.updateChildren(itemToUpdate);
         }
     }
 }

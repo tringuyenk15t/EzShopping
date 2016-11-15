@@ -17,6 +17,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE-FIREBASE.txt'
+        exclude 'META-INF/NOTICE'
+    }
 }
 
 dependencies {
@@ -37,9 +43,12 @@ dependencies {
     //realtime database
     compile 'com.google.firebase:firebase-database:9.6.1'
     //Jackson
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.8.3'
+    compile 'com.fasterxml.jackson.core:jackson-core:2.8.5'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.8.5'
+    compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.5'
     //firebase UI
     compile 'com.firebaseui:firebase-ui:0.6.2'
+
 }
 // Add to the bottom of the file
 apply plugin: 'com.google.gms.google-services'

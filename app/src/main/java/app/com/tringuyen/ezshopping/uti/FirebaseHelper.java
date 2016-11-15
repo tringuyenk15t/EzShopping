@@ -96,15 +96,4 @@ public class FirebaseHelper {
         itemRef.updateChildren(newItemName);
     }
 
-    /**
-     * Add new item for a shopping list
-     * @param item - new item need to be added
-     * @param key - id of shopping list
-     */
-    public void addShoppingListItem(ShoppingListItem item, String key)
-    {
-        DatabaseReference itemDateBaseRef = cliendDB.child(Constants.SHOPPING_LIST_ITEM).child(key);
-        DatabaseReference newItem = itemDateBaseRef.push();
-        newItem.setValue(item);
-    }
 }
