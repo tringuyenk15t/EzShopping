@@ -25,4 +25,6 @@ public class Constants {
      * Constants for bundles, extras and shared preferences keys
      */
     public static final String KEY_LAYOUT_RESOURCE = "LAYOUT_RESOURCE";
+
+    public static final String ERROR_EMAIL_ALREADY_IN_USE = "ERROR_EMAIL_ALREADY_IN_USE";
 }
