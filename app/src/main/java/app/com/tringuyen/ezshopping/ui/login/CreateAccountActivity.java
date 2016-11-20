@@ -25,6 +25,7 @@ import app.com.tringuyen.ezshopping.R;
 import app.com.tringuyen.ezshopping.ui.EzShoppingBaseActivity;
 import app.com.tringuyen.ezshopping.uti.Constants;
 import app.com.tringuyen.ezshopping.uti.FirebaseHelper;
+import app.com.tringuyen.ezshopping.uti.Utils;
 
 public class CreateAccountActivity extends EzShoppingBaseActivity {
     private static final String LOG_TAG = CreateAccountActivity.class.getSimpleName();
@@ -78,8 +79,12 @@ public class CreateAccountActivity extends EzShoppingBaseActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        if (!isEmailValid(userEmail) || !isUserNameValid(userName) || !isPasswordValid(userPassword))
-        return;
+        boolean emailValication = isEmailValid(userEmail);
+        boolean nameValication = isUserNameValid(userName);
+        boolean passwordvalidation = isPasswordValid(userPassword);
+
+        if(!emailValication || !nameValication || !passwordvalidation)
+            return;
 
         /**
          * If everything was valid show the progress dialog
@@ -89,37 +94,43 @@ public class CreateAccountActivity extends EzShoppingBaseActivity {
 
         //create new account
         mAuth.createUserWithEmailAndPassword(userEmail,userPassword)
-        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                mAuthProgressDialog.dismiss();
-                if (!task.isSuccessful()) {
-                    try{
-                       throw task.getException();
-                    }
-                    catch (FirebaseAuthException exception)
-                    {
-                        if(exception.getErrorCode().equals(Constants.ERROR_EMAIL_ALREADY_IN_USE))
-                        {
-                            mEditTextEmailCreate.setError(getString(R.string.error_email_taken));
-                            mEditTextEmailCreate.requestFocus();
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        mAuthProgressDialog.dismiss();
+                        if (!task.isSuccessful()) {
+                            handleSignUpError(task.getException());
                         }
                         else
                         {
-                            showErrorToast(exception.toString());
+                            showErrorToast(getString(R.string.log_message_auth_successful));
+                            mEditTextEmailCreate.setText("");
+                            mEditTextPasswordCreate.setText("");
+                            mEditTextUsernameCreate.setText("");
                         }
                     }
-                    catch (Exception e) {
-                        showErrorToast(e.toString());
-                    }
-                }
-                else
-                {
-                    showErrorToast(getString(R.string.log_message_auth_successful));
-                }
-            }
-        });
+                });
+    }
 
+    private void handleSignUpError(Exception exception)
+    {
+        try{
+            throw exception;
+        }
+        catch (FirebaseAuthException firebaseAuthException)
+        {
+            if(firebaseAuthException.getErrorCode().equals(Constants.ERROR_EMAIL_ALREADY_IN_USE))
+            {
+                mEditTextEmailCreate.setError(getString(R.string.error_email_taken));
+            }
+            else
+            {
+                showErrorToast(firebaseAuthException.toString());
+            }
+        }
+        catch (Exception e) {
+            showErrorToast(e.toString());
+        }
     }
 
     /**
@@ -131,7 +142,7 @@ public class CreateAccountActivity extends EzShoppingBaseActivity {
     //validate email in client side
     private boolean isEmailValid(String email) {
         boolean check = android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
-        if (!check || email == null)
+        if (!check || email.length() < 1)
         {
             mEditTextEmailCreate.setError(getResources().getString(R.string.error_invalid_email_not_valid));
             return false;
@@ -140,7 +151,7 @@ public class CreateAccountActivity extends EzShoppingBaseActivity {
     }
 
     private boolean isUserNameValid(String userName) {
-        if (userName.equals("") )
+        if (userName.length() < 1 )
         {
             mEditTextUsernameCreate.setError(getResources().getString(R.string.error_cannot_be_empty));
             return false;

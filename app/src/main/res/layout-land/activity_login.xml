@@ -7,7 +7,7 @@
     android:fillViewport="true"
     android:id="@+id/activity_login"
     tools:context=".ui.login.LoginActivity">
-    <!--android:background="@drawable/background_loginscreen_land"-->
+
     <LinearLayout
         android:id="@+id/linear_layout_login_activity"
         android:layout_width="match_parent"
@@ -75,10 +75,10 @@
             android:layout_height="@dimen/input_field_height_land"
             android:layout_marginBottom="@dimen/lv_header_text_size"
             android:background="@color/colorPrimary"
-
+            android:onClick="onSignInPressed"
             android:text="@string/button_signin_with_password"
             android:textColor="@android:color/white" />
-        <!--android:onClick="onSignInPressed"-->
+
         <com.google.android.gms.common.SignInButton
             android:id="@+id/login_with_google"
             android:layout_width="wrap_content"

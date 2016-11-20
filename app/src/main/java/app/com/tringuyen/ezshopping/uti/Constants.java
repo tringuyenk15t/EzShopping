@@ -26,5 +26,10 @@ public class Constants {
      */
     public static final String KEY_LAYOUT_RESOURCE = "LAYOUT_RESOURCE";
 
+    //FirebaseAuthException error codes
     public static final String ERROR_EMAIL_ALREADY_IN_USE = "ERROR_EMAIL_ALREADY_IN_USE";
+
+    public static final String ERROR_WRONG_PASSWORD = "ERROR_WRONG_PASSWORD";
+    public static final String ERROR_USER_NOT_FOUND = "ERROR_USER_NOT_FOUND";
+    public static final String ERROR_INVALID_EMAIL = "ERROR_INVALID_EMAIL";
 }

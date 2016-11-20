@@ -7,7 +7,7 @@
     android:fillViewport="true"
     android:id="@+id/activity_login"
     tools:context=".ui.login.LoginActivity">
-    <!--android:background="@drawable/background_loginscreen"-->
+
     <LinearLayout
         android:id="@+id/linear_layout_login_activity"
         android:layout_width="match_parent"
@@ -33,47 +33,75 @@
             android:contentDescription="@string/image_view_logo_image"
             android:src="@drawable/ic_shopping_list" />
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/til_email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/lists_title_bottom_margin"
-            app:hintTextAppearance="@style/HintText">
+        <EditText
+        android:id="@+id/edit_text_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:hint="@string/hint_enter_email"
+        android:inputType="textEmailAddress"
+        android:nextFocusDown="@+id/edit_text_password"
+        android:padding="@dimen/edit_text_padding"
+        android:textColor="@color/black"
+        android:textColorHint="@color/dark_grey"
+        android:textSize="@dimen/login_buttons_text_size"
+        android:layout_marginBottom="@dimen/text_to_button"/>
 
-            <EditText
-                android:id="@+id/edit_text_email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/white"
-                android:hint="@string/hint_enter_email"
-                android:inputType="textEmailAddress"
-                android:nextFocusDown="@+id/edit_text_password"
-                android:padding="@dimen/edit_text_padding"
-                android:textColor="@color/black"
-                android:textColorHint="@color/dark_grey"
-                android:textSize="@dimen/login_buttons_text_size" />
-        </android.support.design.widget.TextInputLayout>
+        <EditText
+        android:id="@+id/edit_text_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:hint="@string/hint_enter_password"
+        android:imeOptions="actionDone"
+        android:inputType="textPassword"
+        android:padding="@dimen/edit_text_padding"
+        android:textColor="@color/black"
+        android:textColorHint="@color/dark_grey"
+        android:textSize="@dimen/login_buttons_text_size"
+        android:layout_marginBottom="@dimen/text_to_button"/>
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/til_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/text_to_button"
-            app:hintTextAppearance="@style/HintText">
+        <!--<android.support.design.widget.TextInputLayout-->
+            <!--android:id="@+id/til_email"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginBottom="@dimen/lists_title_bottom_margin"-->
+            <!--app:hintTextAppearance="@style/HintText">-->
 
-            <EditText
-                android:id="@+id/edit_text_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/white"
-                android:hint="@string/hint_enter_password"
-                android:imeOptions="actionDone"
-                android:inputType="textPassword"
-                android:padding="@dimen/edit_text_padding"
-                android:textColor="@color/black"
-                android:textColorHint="@color/dark_grey"
-                android:textSize="@dimen/login_buttons_text_size" />
-        </android.support.design.widget.TextInputLayout>
+            <!--<EditText-->
+                <!--android:id="@+id/edit_text_email"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="@android:color/white"-->
+                <!--android:hint="@string/hint_enter_email"-->
+                <!--android:inputType="textEmailAddress"-->
+                <!--android:nextFocusDown="@+id/edit_text_password"-->
+                <!--android:padding="@dimen/edit_text_padding"-->
+                <!--android:textColor="@color/black"-->
+                <!--android:textColorHint="@color/dark_grey"-->
+                <!--android:textSize="@dimen/login_buttons_text_size" />-->
+        <!--</android.support.design.widget.TextInputLayout>-->
+
+        <!--<android.support.design.widget.TextInputLayout-->
+            <!--android:id="@+id/til_password"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginBottom="@dimen/text_to_button"-->
+            <!--app:hintTextAppearance="@style/HintText">-->
+
+            <!--<EditText-->
+                <!--android:id="@+id/edit_text_password"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="@android:color/white"-->
+                <!--android:hint="@string/hint_enter_password"-->
+                <!--android:imeOptions="actionDone"-->
+                <!--android:inputType="textPassword"-->
+                <!--android:padding="@dimen/edit_text_padding"-->
+                <!--android:textColor="@color/black"-->
+                <!--android:textColorHint="@color/dark_grey"-->
+                <!--android:textSize="@dimen/login_buttons_text_size" />-->
+        <!--</android.support.design.widget.TextInputLayout>-->
 
         <Button
             style="@style/Widget.Udacity.Button.Login"
@@ -83,8 +111,9 @@
             android:layout_marginBottom="@dimen/lv_header_text_size"
             android:background="@color/colorPrimary"
             android:text="@string/button_signin_with_password"
+            android:onClick="onSignInPressed"
             android:textColor="@android:color/white" />
-        <!--android:onClick="onSignInPressed"-->
+
 
         <com.google.android.gms.common.SignInButton
             android:id="@+id/login_with_google"
