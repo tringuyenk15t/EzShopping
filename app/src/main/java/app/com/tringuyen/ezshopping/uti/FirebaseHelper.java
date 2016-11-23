@@ -1,6 +1,5 @@
 package app.com.tringuyen.ezshopping.uti;
 
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -76,25 +75,25 @@ public class FirebaseHelper {
         HashMap<String, Object> lastTimeChanged = new HashMap<String, Object>();
         lastTimeChanged.put(Constants.FIREBASE_PROPERTY_TIMESTAMP,ServerValue.TIMESTAMP);
 
-        newListName.put(Constants.LSTNAME,name);
+        newListName.put(Constants.LIST_NAME,name);
         newListName.put(Constants.DATE_EDITED,lastTimeChanged);
         newListObject.updateChildren(newListName, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                //TODO handle update error
+
             }
         });
     }
 
     /**
-     * Add new item for a shopping list
-     * @param item - new item need to be added
-     * @param key - id of shopping list
+     *
      */
-    public void addShoppingListItem(ShoppingListItem item, String key)
+    public void updateItemName(String name, String listID, String itemID)
     {
-        DatabaseReference itemDateBaseRef = cliendDB.child(Constants.SHOPPING_LIST_ITEM).child(key);
-        DatabaseReference newItem = itemDateBaseRef.push();
-        newItem.setValue(item);
+        DatabaseReference itemRef = cliendDB.child(Constants.SHOPPING_LIST_ITEM).child(listID).child(itemID);
+        HashMap<String,Object> newItemName = new HashMap<>();
+        newItemName.put("name",name);
+        itemRef.updateChildren(newItemName);
     }
+
 }

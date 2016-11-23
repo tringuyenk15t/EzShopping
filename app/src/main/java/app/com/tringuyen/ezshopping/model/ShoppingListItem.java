@@ -5,21 +5,21 @@ package app.com.tringuyen.ezshopping.model;
  */
 
 public class ShoppingListItem {
-    private String name,owner;
+    private String itemName,owner;
 
     public ShoppingListItem()
     {
 
     }
 
-    public ShoppingListItem(String name)
+    public ShoppingListItem(String itemName)
     {
-        this.name = name;
+        this.itemName = itemName;
         this.owner = "Anonymous onwer";
     }
 
-    public String getName() {
-        return name;
+    public String getItemName() {
+        return itemName;
     }
 
     public String getOwner() {

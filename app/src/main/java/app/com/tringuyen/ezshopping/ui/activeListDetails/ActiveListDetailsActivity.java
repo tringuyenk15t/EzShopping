@@ -18,8 +18,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.EventListener;
-
 import app.com.tringuyen.ezshopping.R;
 import app.com.tringuyen.ezshopping.model.ShoppingList;
 import app.com.tringuyen.ezshopping.model.ShoppingListItem;
@@ -30,13 +28,13 @@ import app.com.tringuyen.ezshopping.uti.FirebaseHelper;
 public class ActiveListDetailsActivity extends EzShoppingBaseActivity {
     private static final String LOG_TAG = ActiveListDetailsActivity.class.getSimpleName();
     private ListView mListView;
-    private FloatingActionButton bt_addItem;
-    private FirebaseListAdapter<ShoppingListItem> listItemAdapter;
-    private DatabaseReference shoppingListRef;
+    private FloatingActionButton mAddItemButton;
+    private FirebaseListAdapter<ShoppingListItem> mListItemAdapter;
+    private DatabaseReference mShoppingListRef;
     private ShoppingList mShoppingList;
-    private Toolbar toolbar;
-    private String key;
-    private ValueEventListener shoppingListListener;
+    private Toolbar mToolbar;
+    private String mListID;
+    private ValueEventListener mShoppingListListener;
 
     private static DatabaseReference listDB;
     @Override
@@ -45,16 +43,14 @@ public class ActiveListDetailsActivity extends EzShoppingBaseActivity {
         setContentView(R.layout.activity_active_list_details);
 
         Intent intent = getIntent();
-        key = intent.getStringExtra(Constants.LIST_DETAIL_KEY);
-        if (key == null) {
+        mListID = intent.getStringExtra(Constants.LIST_DETAIL_KEY);
+        if (mListID == null) {
              /* No point in continuing without a valid ID. */
             finish();
             return;
         }
          //Link layout elements from XML and setup the toolbar
         initializeScreen();
-        setUpToolBar();
-        setupItemList();
     }
 
     /**
@@ -63,14 +59,24 @@ public class ActiveListDetailsActivity extends EzShoppingBaseActivity {
     private void initializeScreen() {
         //initialize layout components
         mListView = (ListView) findViewById(R.id.list_view_shopping_list_items);
-        toolbar = (Toolbar) findViewById(R.id.app_bar);
-        bt_addItem = (FloatingActionButton) findViewById(R.id.fab_detail_add_item);
+        mToolbar = (Toolbar) findViewById(R.id.app_bar);
+        mAddItemButton = (FloatingActionButton) findViewById(R.id.fab_detail_add_item);
 
         //add item button listener
-        bt_addItem.setOnClickListener(new View.OnClickListener() {
+        mAddItemButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showAddListItemDialog();
+            }
+        });
+        setUpToolBar();
+        setupItemList();
+
+        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+                return false;
             }
         });
     }
@@ -81,8 +87,8 @@ public class ActiveListDetailsActivity extends EzShoppingBaseActivity {
      */
     private void setUpToolBar()
     {
-        shoppingListRef = FirebaseHelper.getIntance().getDataCollection(Constants.ACTLIST).child(key);
-        shoppingListRef.addValueEventListener(shoppingListListener = new ValueEventListener() {
+        mShoppingListRef = FirebaseHelper.getIntance().getDataCollection(Constants.ACTLIST).child(mListID);
+        mShoppingListRef.addValueEventListener(mShoppingListListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() == null)
@@ -95,7 +101,7 @@ public class ActiveListDetailsActivity extends EzShoppingBaseActivity {
                     return;
                 }
                 mShoppingList = new ShoppingList(dataSnapshot);
-                toolbar.setTitle(mShoppingList.getListName());
+                mToolbar.setTitle(mShoppingList.getListName());
             }
 
             @Override
@@ -107,7 +113,7 @@ public class ActiveListDetailsActivity extends EzShoppingBaseActivity {
         });
 
         /* Common toolbar setup */
-        setSupportActionBar(toolbar);
+        setSupportActionBar(mToolbar);
 
         /* Add back button to the action bar */
         if (getSupportActionBar() != null) {
@@ -120,10 +126,9 @@ public class ActiveListDetailsActivity extends EzShoppingBaseActivity {
      */
     private void setupItemList()
     {
-        //setup item list
-        DatabaseReference shoppingListRef = FirebaseHelper.getIntance().getDataCollection(Constants.SHOPPING_LIST_ITEM).child(key);
-        listItemAdapter = new ActiveListItemAdapter(this,ShoppingListItem.class,R.layout.single_active_list_item,shoppingListRef);
-        mListView.setAdapter(listItemAdapter);
+        DatabaseReference shoppingListRef = FirebaseHelper.getIntance().getDataCollection(Constants.SHOPPING_LIST_ITEM).child(mListID);
+        mListItemAdapter = new ActiveListItemAdapter(this,ShoppingListItem.class,R.layout.single_active_list_item,shoppingListRef);
+        mListView.setAdapter(mListItemAdapter);
     }
 
     @Override
@@ -164,7 +169,7 @@ public class ActiveListDetailsActivity extends EzShoppingBaseActivity {
      */
     private void showAddListItemDialog()
     {
-        AddListItemDialogFragment dialog = AddListItemDialogFragment.newInstance(key);
+        AddListItemDialogFragment dialog = AddListItemDialogFragment.newInstance(mListID);
         dialog.show(this.getFragmentManager(),"AddItemDialogFragment");
     }
 
@@ -172,7 +177,7 @@ public class ActiveListDetailsActivity extends EzShoppingBaseActivity {
      * Remove current shopping list and its items from all nodes
      */
     private void removeList() {
-        DialogFragment dialog = RemoveListDialogFragment.newInstance(mShoppingList,key);
+        DialogFragment dialog = RemoveListDialogFragment.newInstance(mShoppingList, mListID);
         dialog.show(this.getFragmentManager(),"RemoveListDialogFragment");
     }
 
@@ -181,7 +186,7 @@ public class ActiveListDetailsActivity extends EzShoppingBaseActivity {
      */
     private void showEditListNameDialog() {
         /* Create an instance of the dialog fragment and show it */
-        DialogFragment dialog = EditListNameDialogFragment.newInstance(mShoppingList,key);
+        DialogFragment dialog = EditListNameDialogFragment.newInstance(mShoppingList, mListID);
         dialog.show(this.getFragmentManager(), "EditListNameDialogFragment");
     }
 
@@ -189,7 +194,7 @@ public class ActiveListDetailsActivity extends EzShoppingBaseActivity {
     public void onDestroy() {
         super.onDestroy();
         //remove all event listeners
-        listItemAdapter.cleanup();
-        shoppingListRef.removeEventListener(shoppingListListener);
+        mListItemAdapter.cleanup();
+        mShoppingListRef.removeEventListener(mShoppingListListener);
     }
 }

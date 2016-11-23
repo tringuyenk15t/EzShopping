@@ -10,6 +10,13 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ServerValue;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import app.com.tringuyen.ezshopping.R;
 import app.com.tringuyen.ezshopping.model.ShoppingListItem;
 import app.com.tringuyen.ezshopping.uti.Constants;
@@ -20,16 +27,16 @@ import app.com.tringuyen.ezshopping.uti.FirebaseHelper;
  */
 
 public class AddListItemDialogFragment extends DialogFragment {
-    private String key;
-    private EditText ed_itemName;
+    private String mListID;
+    private EditText mItemNameEditText;
     /**
      * Public static constructor that creates fragment and passes a bundle with data into it when adapter is created
      */
-    public static AddListItemDialogFragment newInstance(String key)
+    public static AddListItemDialogFragment newInstance(String listID)
     {
         AddListItemDialogFragment addListItemDialogFragment = new AddListItemDialogFragment();
         Bundle bundle = new Bundle();
-        bundle.putString(Constants.LIST_DETAIL_KEY,key);
+        bundle.putString(Constants.LIST_DETAIL_KEY,listID);
         addListItemDialogFragment.setArguments(bundle);
         return addListItemDialogFragment;
     }
@@ -37,7 +44,7 @@ public class AddListItemDialogFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        key = getArguments().getString(Constants.LIST_DETAIL_KEY);
+        mListID = getArguments().getString(Constants.LIST_DETAIL_KEY);
     }
 
     @Override
@@ -52,12 +59,12 @@ public class AddListItemDialogFragment extends DialogFragment {
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View v = inflater.inflate(R.layout.dialog_add_item,null);
-        ed_itemName = (EditText) v.findViewById(R.id.edit_text_list_dialog);
+        mItemNameEditText = (EditText) v.findViewById(R.id.edit_text_list_dialog);
         buider.setView(v)
                 .setPositiveButton(R.string.positive_button_add_list_item, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String itemName = ed_itemName.getText().toString();
+                        String itemName = mItemNameEditText.getText().toString();
                         createNewItem(itemName);
                     }
                 })
@@ -74,8 +81,26 @@ public class AddListItemDialogFragment extends DialogFragment {
     {
         if (itemName.length() > 0)
         {
-            ShoppingListItem item = new ShoppingListItem(itemName);
-            FirebaseHelper.getIntance().addShoppingListItem(item,key);
+            DatabaseReference dbRef = FirebaseHelper.getIntance().getDatabase();
+            DatabaseReference newItempath = dbRef.child(Constants.SHOPPING_LIST_ITEM).child(mListID).push();
+
+            String itemID = newItempath.getKey();
+            ShoppingListItem newItem = new ShoppingListItem(itemName);
+
+            HashMap<String,Object> itemToAddObject = new HashMap<>();
+            HashMap<String,Object> itemToAdd =
+                    (HashMap<String, Object>) new ObjectMapper().convertValue(newItem,Map.class);
+            HashMap<String,Object> itemTimestamp = new HashMap<>();
+
+            //add new item
+            itemToAddObject.put(Constants.SHOPPING_LIST_ITEM + "/" + mListID + "/" + itemID,itemToAdd);
+
+            // update timestamp
+            itemTimestamp.put(Constants.FIREBASE_PROPERTY_TIMESTAMP, ServerValue.TIMESTAMP);
+            itemToAddObject.put(Constants.ACTLIST + "/" + mListID + "/"+ Constants.DATE_EDITED,itemTimestamp);
+            //update data to firebase
+            dbRef.updateChildren(itemToAddObject);
+            //TODO consider to create a static method that will update timestamp
         }
     }
 }

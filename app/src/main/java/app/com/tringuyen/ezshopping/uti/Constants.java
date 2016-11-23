@@ -9,12 +9,15 @@ import java.text.SimpleDateFormat;
 
 public class Constants {
 
-    public static final String LSTNAME = "listName";
+    public static final String LIST_NAME = "listName";
+    public static final String ITEM_NAME = "itemName";
     public static final String ACTLIST = "activeList";
     public static final String FIREBASE_PROPERTY_TIMESTAMP = "timestamp";
     public static final String DATE_CREATED = "dateCreated";
     public static final String DATE_EDITED = "dateEdited";
+
     public static final String LIST_DETAIL_KEY = "ListKey";
+    public static final String ITEM_KEY = "ItemKey";
     public static final String SHOPPING_LIST_ITEM = "shoppingListItem";
 
     public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -22,4 +25,11 @@ public class Constants {
      * Constants for bundles, extras and shared preferences keys
      */
     public static final String KEY_LAYOUT_RESOURCE = "LAYOUT_RESOURCE";
+
+    //FirebaseAuthException error codes
+    public static final String ERROR_EMAIL_ALREADY_IN_USE = "ERROR_EMAIL_ALREADY_IN_USE";
+
+    public static final String ERROR_WRONG_PASSWORD = "ERROR_WRONG_PASSWORD";
+    public static final String ERROR_USER_NOT_FOUND = "ERROR_USER_NOT_FOUND";
+    public static final String ERROR_INVALID_EMAIL = "ERROR_INVALID_EMAIL";
 }

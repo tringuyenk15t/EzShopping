@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -69,16 +70,16 @@ public abstract class EzShoppingBaseActivity extends AppCompatActivity implement
         return super.onOptionsItemSelected(item);
     }
 
-    protected void initializeBackground(LinearLayout linearLayout) {
+    protected void initializeBackground(ScrollView ScrollView) {
 
         /**
-         * Set different background image for landscape and portrait layoutsp['
+         * Set different background image for landscape and portrait layout
          *
          */
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            linearLayout.setBackgroundResource(R.drawable.background_loginscreen_land);
+            ScrollView.setBackgroundResource(R.drawable.background_loginscreen_land);
         } else {
-            linearLayout.setBackgroundResource(R.drawable.background_loginscreen);
+            ScrollView.setBackgroundResource(R.drawable.background_loginscreen);
         }
     }
 
